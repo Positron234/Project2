@@ -1,0 +1,24 @@
+﻿<Window x:Class="Project2.View.DeleteProdukt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project2.View"
+        mc:Ignorable="d"
+        Title="DeleteProduct" Height="300" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
+            <TextBlock Text="Название"></TextBlock>
+            <TextBox x:Name="namee"></TextBox>
+            <TextBlock Text="Дата изготовления"></TextBlock>
+            <TextBox x:Name="n1"></TextBox>
+            <TextBlock Text="Срок годности"></TextBlock>
+            <TextBox x:Name="n2"></TextBox>
+        </StackPanel>
+        <Button Grid.Row="1" Content="Удалить продукт"></Button>
+    </Grid>
+</Window>
