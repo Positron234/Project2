@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project2.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,20 @@ namespace Project2.View
     /// </summary>
     public partial class DeleteProdukt : Window
     {
+        private IProductsModel _productmodel;
+
         public DeleteProdukt()
         {
             InitializeComponent();
+            
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string product = namee.Text;
+            _productmodel = new ProjectsModel(new DataService(), product);
+            DataContext = _productmodel;
+            DialogResult = false;
         }
     }
 }

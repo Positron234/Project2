@@ -16,8 +16,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Project2
+namespace Project2.View
 {
+
     public partial class MainWindow : Window
     {
         private IProductsModel _productmodel; 
@@ -32,7 +33,7 @@ namespace Project2
         {
             AddNewProduct add = new AddNewProduct();
             add.Owner= this;
-            add.Show();
+            add.ShowDialog();
 
         }
 
@@ -40,7 +41,7 @@ namespace Project2
         {
             DeleteProdukt del = new DeleteProdukt();
             del.Owner= this;
-            del.Show();
+            del.ShowDialog();
         }
     }
 }

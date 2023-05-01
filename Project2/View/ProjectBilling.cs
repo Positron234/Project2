@@ -49,7 +49,25 @@ namespace Project2.View
                 Products.Add(project);
             }
         }
-
+        public ProjectsModel(IDataService dataService, string name, int srok, DateTime date)
+        {
+            Products = new ObservableCollection<Product>();
+            dataService.CreateProduct(name, srok, date);
+            foreach (Product project in dataService.GetAllProducts())
+            {
+                Products.Add(project);
+            }
+        }
+        public ProjectsModel(IDataService dataService, string name)
+        {
+            Products = new ObservableCollection<Product>();
+            
+            foreach (Product project in dataService.GetAllProducts())
+            {
+                Products.Add(project);
+            }
+            dataService.DeleteProduct(GetProject(name));
+        }
         public void UpdateProducts(IProduct updatedProject)
         {
             GetProject(updatedProject.ID).Update(updatedProject);
@@ -63,5 +81,10 @@ namespace Project2.View
                 project => project.ID == projectId);
         }
 
+        private Product GetProject(string name)
+        {
+            return Products.FirstOrDefault(
+                project => project.Products == name);
+        }
     }
 }

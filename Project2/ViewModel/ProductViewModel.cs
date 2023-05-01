@@ -28,10 +28,10 @@ namespace Project2.ViewModel
         private Status _estimateStatus = Status.None;
         private void UpdateEstimateStatus()
         {
-            DateTime dateTime = new DateTime(0, 0, _Srok);
-            if (DateStart.Add(dateTime.TimeOfDay)==DateTime.Now)
+            TimeSpan day = new TimeSpan(_Srok,0,0,0);
+            if (DateStart.Add(day) ==DateTime.Now)
                 EstimateStatus = Status.None;
-            else if (DateStart.Add(dateTime.TimeOfDay) > DateTime.Now)
+            else if (DateStart.Add(day) > DateTime.Now)
                 EstimateStatus = Status.Good;
             else
                 EstimateStatus = Status.Bad;

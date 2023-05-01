@@ -11,6 +11,8 @@ namespace Project2.Model
     public interface IDataService
     {
         public  IList<Product> GetAllProducts();
+        public string CreateProduct(string name, int srok, DateTime date);
+        public string DeleteProduct(Product product);
     }
     internal class DataService:IDataService
     {
@@ -22,7 +24,7 @@ namespace Project2.Model
                 return result;
             }
         }
-        public static string CreateProduct(string name)
+        public string CreateProduct(string name,int srok,DateTime date)
         {
             string result = "Уже существует";
             using (DataServiceStub db = new DataServiceStub())
@@ -31,15 +33,20 @@ namespace Project2.Model
                 bool checkIsExist = db.Products.Any(el => el.Products == name);
                 if (!checkIsExist)
                 {
-                    Product newDepartment = new Product { Products = name };
-                    db.Products.Add(newDepartment);
+                    Product newProduct = new Product
+                    {
+                        Products = name,
+                        Srok =srok,
+                        DateStart=date
+                    };
+                    db.Products.Add(newProduct);
                     db.SaveChanges();
                     result = "Сделано!";
                 }
                 return result;
             }
         }
-        public static string DeleteProduct(Product product)
+        public string DeleteProduct(Product product)
         {
             string result = "Такого продукта не существует";
             using (DataServiceStub db = new DataServiceStub())
