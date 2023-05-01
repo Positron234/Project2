@@ -14,10 +14,6 @@
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
             <TextBlock Text="Название"></TextBlock>
             <TextBox x:Name="namee"></TextBox>
-            <TextBlock Text="Дата изготовления"></TextBlock>
-            <TextBox x:Name="n1"></TextBox>
-            <TextBlock Text="Срок годности"></TextBlock>
-            <TextBox x:Name="n2"></TextBox>
         </StackPanel>
         <Button Grid.Row="1" Content="Удалить продукт"></Button>
     </Grid>

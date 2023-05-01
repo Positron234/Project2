@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 namespace ProjectBilling.DataAccess
 {
-    public interface IDataService
-    {
-        IList<Product> Product();
-    }
 
     public class DataServiceStub : DbContext
     {
@@ -18,7 +14,7 @@ namespace ProjectBilling.DataAccess
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(DESKTOP-C8L1TCD)\\mssqllocaldb;Database=SrokProduct;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SrokProduct;Trusted_Connection=True;");
         }
     }
 }

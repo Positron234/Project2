@@ -8,19 +8,21 @@ namespace Project.Model
 {
     public interface IProduct
     {
-         string Name { get; set; }
-         string DateStart { get; set; }
-         string Srok { get; set; }
-        void Update(IProduct product);
+        public int ID { get; set; }
+        public string Products { get; set; }
+         public DateTime DateStart { get; set; }
+         public int Srok { get; set; }
+        public void Update(IProduct product);
     }
     public class Product: IProduct
     {
-        public string Name { get; set; }
-        public string DateStart { get; set; }
-        public string Srok { get; set; }
+        public int ID { get; set; }
+        public string Products { get; set; }
+        public DateTime DateStart { get; set; }
+        public int Srok { get; set; }
         public void Update(IProduct product)
         {
-            Name = product.Name;
+            Products = product.Products;
             DateStart = product.DateStart;
             Srok = product.Srok;
         }
