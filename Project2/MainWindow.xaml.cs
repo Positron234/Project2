@@ -1,5 +1,5 @@
-﻿using Project2.Model;
-using Project2.View;
+﻿using Project2.View;
+using Project2.ViewModel;
 using ProjectBilling.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -21,27 +21,11 @@ namespace Project2.View
 
     public partial class MainWindow : Window
     {
-        private IProductsModel _productmodel; 
+        ApplicationViewModel applicationViewModel=new ApplicationViewModel();
         public MainWindow()
         {
             InitializeComponent();
-            _productmodel = new ProjectsModel(new DataService());
-            DataContext = _productmodel;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            AddNewProduct add = new AddNewProduct();
-            add.Owner= this;
-            add.ShowDialog();
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            DeleteProdukt del = new DeleteProdukt();
-            del.Owner= this;
-            del.ShowDialog();
+            DataContext = applicationViewModel;
         }
     }
 }

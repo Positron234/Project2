@@ -18,33 +18,29 @@ namespace Project2.Model
     {
         public  IList<Product> GetAllProducts()
         {
-            using (DataServiceStub db = new DataServiceStub())
-            {
-                var result = db.Products.ToList();
-                return result;
-            }
+            using DataServiceStub db = new DataServiceStub();
+            var result = db.Products.ToList();
+            return result;
         }
         public string CreateProduct(string name,int srok,DateTime date)
         {
             string result = "Уже существует";
-            using (DataServiceStub db = new DataServiceStub())
+            using DataServiceStub db = new();
+            //проверяем сущесвует ли отдел
+            bool checkIsExist = db.Products.Any(el => el.Products == name);
+            if (!checkIsExist)
             {
-                //проверяем сущесвует ли отдел
-                bool checkIsExist = db.Products.Any(el => el.Products == name);
-                if (!checkIsExist)
+                Product newProduct = new Product
                 {
-                    Product newProduct = new Product
-                    {
-                        Products = name,
-                        Srok =srok,
-                        DateStart=date
-                    };
-                    db.Products.Add(newProduct);
-                    db.SaveChanges();
-                    result = "Сделано!";
-                }
-                return result;
+                    Products = name,
+                    Srok = srok,
+                    DateStart = date
+                };
+                db.Products.Add(newProduct);
+                db.SaveChanges();
+                result = "Сделано!";
             }
+            return result;
         }
         public string DeleteProduct(Product product)
         {

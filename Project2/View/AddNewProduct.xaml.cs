@@ -20,24 +20,12 @@ namespace Project2.View
     /// </summary>
     public partial class AddNewProduct : Window
     {
-        private IProductsModel _productmodel;
+        
 
-        public AddNewProduct()
+        public AddNewProduct( object param)
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            string product = name.Text;
-            int srok = Convert.ToInt32(n2.Text);
-            int day = Convert.ToInt32(n1.Text);
-            int month = Convert.ToInt32(n3.Text);
-            int year = Convert.ToInt32(n4.Text);
-            DateTime date = new DateTime(year, month, day);
-            _productmodel = new ProjectsModel(new DataService(), product,srok,date);
-            DataContext = _productmodel;
-            DialogResult = false;
+            DataContext = param;
         }
     }
 }
