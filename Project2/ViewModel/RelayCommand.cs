@@ -25,7 +25,7 @@ namespace Project2.ViewModel
         }
 
         public bool CanExecute(object parameter)
-        {
+         {
             return this.canExecute == null || this.canExecute(parameter);
         }
 

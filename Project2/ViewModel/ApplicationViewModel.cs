@@ -8,14 +8,25 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Project2.ViewModel
 {
-    class ApplicationViewModel:INotifyPropertyChanged
+    public enum Status { None, Good, Bad }
+    public interface IApplicationViewModel: IProduct
     {
+        Status EstimateStatus { get; set; }
+    }
+    class ApplicationViewModel: IApplicationViewModel,INotifyPropertyChanged
+    {
+        private Status _estimateStatus = Status.None;
         private Product selectedProduct;
         private DataService db = new DataService();
+        private int id { get; set; }
+        private string products { get; set; }
+        private DateTime datestart { get; set; }
+        private int srok { get; set; }
         public ObservableCollection<Product> Product { get; set; }
         private int month;
         private int year;
@@ -23,6 +34,7 @@ namespace Project2.ViewModel
         private string name;
         private int time;
         private RelayCommand addCommand;
+        #region Command
         public RelayCommand AddCommand
         {
             get
@@ -37,7 +49,7 @@ namespace Project2.ViewModel
                         prod.Srok = time;
                         Product.Insert(0, prod);
                         SelectedProduct = prod;
-                        db.CreateProduct(prod.Products, prod.Srok,dt );
+                        db.CreateProduct(prod);
                     }));
             }
         }
@@ -70,9 +82,59 @@ namespace Project2.ViewModel
                      AddNewProduct addNewProduct = new AddNewProduct(this);
                       addNewProduct.ShowDialog();
                   },
-                 (obj) => Product.Count > 0));
+                 (obj) => Product.Count >= 0));
             }
         }
+        #endregion
+        private void UpdateEstimateStatus()
+        {
+            TimeSpan day = new TimeSpan(SelectedProduct.Srok, 0, 0, 0);
+            if (SelectedProduct.DateStart.Add(day) == DateTime.Now)
+                EstimateStatus = Status.None;
+            else if (SelectedProduct.DateStart.Add(day) > DateTime.Now)
+                EstimateStatus = Status.Good;
+            else
+                EstimateStatus = Status.Bad;
+
+        }
+        #region Product sector
+        public int ID
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                OnPropertyChanged("ID");
+            }
+        }
+        public string Products
+        {
+            get { return products; }
+            set
+            {
+                products = value;
+                OnPropertyChanged("Products");
+            }
+        }
+        public DateTime DateStart
+        {
+            get { return datestart; }
+            set
+            {
+                datestart = value;
+                OnPropertyChanged("DateStart");
+            }
+        }
+        public int Srok
+        {
+            get { return srok; }
+            set
+            {
+                srok = value;
+                OnPropertyChanged("Srok");
+            }
+        }
+        #endregion 
         public Product SelectedProduct
         {
             get { return selectedProduct; }
@@ -82,6 +144,7 @@ namespace Project2.ViewModel
                 OnPropertyChanged("SelectedProduct");
             }
         }
+        #region DateForm
         public int Month
         {
             get { return month; }
@@ -127,18 +190,28 @@ namespace Project2.ViewModel
                 OnPropertyChanged("Day");
             }
         }
+        #endregion
         public ApplicationViewModel()
         {
             Product = new ObservableCollection<Product>(db.GetAllProducts());
            
         }
-
+        public Status EstimateStatus
+        {
+            get { return _estimateStatus; }
+            set
+            {
+                _estimateStatus = value;
+                OnPropertyChanged("EstimateStatus");
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+       
     }
 }
 
