@@ -27,6 +27,7 @@ namespace Project2.ViewModel
         private string products { get; set; }
         private DateTime datestart { get; set; }
         private int srok { get; set; }
+        public AddNewProduct addNewProduct;
         public ObservableCollection<Product> Product { get; set; }
         private int month;
         private int year;
@@ -39,17 +40,19 @@ namespace Project2.ViewModel
         {
             get
             {
+                
                 return addCommand ??
                     (addCommand = new RelayCommand(obj =>
                     {
                         Product prod = new Product();
-                        DateTime dt = new DateTime(year, month, day);
-                        prod.DateStart = dt;
-                        prod.Products = name;
-                        prod.Srok = time;
-                        Product.Insert(0, prod);
-                        SelectedProduct = prod;
-                        db.CreateProduct(prod);
+                    DateTime dt = new DateTime(year, month, day);
+                    prod.DateStart = dt;
+                    prod.Products = name;
+                    prod.Srok = time;
+                    Product.Insert(0, prod);
+                    SelectedProduct = prod;
+                    db.CreateProduct(prod);
+                    addNewProduct.Close();
                     }));
             }
         }
@@ -79,7 +82,7 @@ namespace Project2.ViewModel
                 return openCommand ??
                   (openCommand = new RelayCommand(obj =>
                   {
-                     AddNewProduct addNewProduct = new AddNewProduct(this);
+                     
                       addNewProduct.ShowDialog();
                   },
                  (obj) => Product.Count >= 0));
@@ -194,7 +197,7 @@ namespace Project2.ViewModel
         public ApplicationViewModel()
         {
             Product = new ObservableCollection<Product>(db.GetAllProducts());
-           
+            addNewProduct = new AddNewProduct(this);
         }
         public Status EstimateStatus
         {
