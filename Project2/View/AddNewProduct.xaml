@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project2.View"
         mc:Ignorable="d"
-        Title="AddNewProduct" Height="300" Width="300">
+        Title="AddNewProduct" MinHeight="300" MinWidth="300" MaxHeight="300" MaxWidth="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>

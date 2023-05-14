@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Project2.ViewModel
 {
@@ -23,11 +24,11 @@ namespace Project2.ViewModel
         private Status _estimateStatus = Status.None;
         private Product selectedProduct;
         private DataService db = new DataService();
+        public AddNewProduct addNewProduct;
         private int id { get; set; }
         private string products { get; set; }
         private DateTime datestart { get; set; }
         private int srok { get; set; }
-        public AddNewProduct addNewProduct;
         public ObservableCollection<Product> Product { get; set; }
         private int month;
         private int year;
@@ -41,19 +42,21 @@ namespace Project2.ViewModel
             get
             {
                 
-                return addCommand ??
-                    (addCommand = new RelayCommand(obj =>
-                    {
-                        Product prod = new Product();
-                    DateTime dt = new DateTime(year, month, day);
-                    prod.DateStart = dt;
-                    prod.Products = name;
-                    prod.Srok = time;
-                    Product.Insert(0, prod);
-                    SelectedProduct = prod;
-                    db.CreateProduct(prod);
-                    addNewProduct.Close();
-                    }));
+                    return addCommand ??
+                        (addCommand = new RelayCommand(obj =>
+                        {
+                            Product prod = new Product();
+                            DateTime dt = new DateTime(year, month, day);
+                            prod.DateStart = dt;
+                            prod.Products = name;
+                            prod.Srok = time;
+                            Product.Insert(0, prod);
+                            SelectedProduct = prod;
+                            db.CreateProduct(prod);
+                            addNewProduct.Close();
+                        }));
+                
+                
             }
         }
         private RelayCommand removeCommand;
@@ -64,7 +67,7 @@ namespace Project2.ViewModel
                 return removeCommand ??
                   (removeCommand = new RelayCommand(obj =>
                   {
-                      Product prod = obj as Product;
+                      Product? prod = obj as Product;
                       if (prod != null)
                       {
                           Product.Remove(prod);
@@ -82,22 +85,27 @@ namespace Project2.ViewModel
                 return openCommand ??
                   (openCommand = new RelayCommand(obj =>
                   {
-                     
+                      month = 0;
+                      year = 0;
+                      day = 0;
+                      name = "";
+                      time = 0;
+                      addNewProduct = new AddNewProduct(this);
                       addNewProduct.ShowDialog();
-                  },
-                 (obj) => Product.Count >= 0));
+                  }));
             }
         }
         #endregion
-        private void UpdateEstimateStatus()
+        private Status UpdateEstimateStatus(Product prod)
         {
-            TimeSpan day = new TimeSpan(SelectedProduct.Srok, 0, 0, 0);
-            if (SelectedProduct.DateStart.Add(day) == DateTime.Now)
-                EstimateStatus = Status.None;
-            else if (SelectedProduct.DateStart.Add(day) > DateTime.Now)
-                EstimateStatus = Status.Good;
+            TimeSpan day = new TimeSpan(prod.Srok, 0, 0, 0);
+            if (prod.DateStart.Add(day) == DateTime.Now)
+                _estimateStatus=Status.None;
+            else if (prod.DateStart.Add(day) > DateTime.Now)
+                _estimateStatus = Status.Good;
             else
-                EstimateStatus = Status.Bad;
+                _estimateStatus = Status.Bad;
+            return _estimateStatus;
 
         }
         #region Product sector
@@ -144,6 +152,7 @@ namespace Project2.ViewModel
             set
             {
                 selectedProduct = value;
+                EstimateStatus = UpdateEstimateStatus(selectedProduct);
                 OnPropertyChanged("SelectedProduct");
             }
         }
@@ -197,7 +206,6 @@ namespace Project2.ViewModel
         public ApplicationViewModel()
         {
             Product = new ObservableCollection<Product>(db.GetAllProducts());
-            addNewProduct = new AddNewProduct(this);
         }
         public Status EstimateStatus
         {
