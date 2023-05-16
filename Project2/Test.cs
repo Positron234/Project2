@@ -16,21 +16,41 @@ namespace Testing
         public void AddtoBase()
         {
             Product prod = new Product();
-            prod.DateStart = DateTime.Now;
+            prod.DateStart = new DateTime(2023, 1, 1);
             prod.Srok = 0;
             prod.Products = " ";
             DataService dataService = new DataService();
             Assert.AreEqual("Сделано!", dataService.CreateProduct(prod));
         }
         [TestCase]
-        public void DeletetoBase()
+        public void AddtoBase2()
         {
             Product prod = new Product();
-            prod.DateStart = DateTime.Now;
+            prod.DateStart = new DateTime(2023, 1, 1);
             prod.Srok = 0;
             prod.Products = " ";
             DataService dataService = new DataService();
-            Assert.AreEqual("Сделано! Продукт " + prod.Products + " удален", dataService.DeleteProduct(prod));
+            Assert.AreEqual("Уже существует", dataService.CreateProduct(prod));
+        }
+        [TestCase]
+        public void DeletetoBase()
+        {
+            Product prod = new Product();
+            prod.DateStart = new DateTime(2023, 1, 1);
+            prod.Srok = 0;
+            prod.Products = " ";
+            DataService dataService = new DataService();
+            Assert.AreEqual("Сделано!", dataService.DeleteProduct(prod));
+        }
+        [TestCase]
+        public void DeletetoBase2()
+        {
+            Product prod = new Product();
+            prod.DateStart = new DateTime(2023, 1, 1);
+            prod.Srok = 0;
+            prod.Products = " ";
+            DataService dataService = new DataService();
+            Assert.AreEqual("Такого продукта не существует", dataService.DeleteProduct(prod));
         }
     }
 }

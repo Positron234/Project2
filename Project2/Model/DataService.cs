@@ -18,7 +18,7 @@ namespace Project2.Model
     {
         public  IList<Product> GetAllProducts()
         {
-            using DataServiceStub db = new DataServiceStub();
+            using DataServiceStub db = new();
             var result = db.Products.ToList();
             return result;
         }
@@ -40,11 +40,11 @@ namespace Project2.Model
         public string DeleteProduct(Product product)
         {
             string result = "Такого продукта не существует";
-            using (DataServiceStub db = new DataServiceStub())
+            using (DataServiceStub db = new())
             {
                 db.Products.Remove(product);
                 db.SaveChanges();
-                result = "Сделано! Продукт " + product.Products + " удален";
+                result = "Сделано!";
             }
             return result;
         }

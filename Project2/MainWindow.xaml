@@ -7,35 +7,24 @@
         mc:Ignorable="d"
         Title="Самая полезная программа в мире" MinHeight="450" MinWidth="800">
     <Window.Resources>
-        <Style x:Key="EstimateStyle" TargetType="{x:Type ListViewItem}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding EstimateStatus}" Value="None">
-                    <Setter Property="Background" Value="White" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding EstimateStatus}" Value="Good">
-                    <Setter Property="Background" Value="Green" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding EstimateStatus}" Value="Bad">
-                    <Setter Property="Background" Value="Red" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" ItemContainerStyle="{StaticResource EstimateStyle}"  ItemsSource="{Binding Product}" SelectedItem="{Binding SelectedProduct}" IsEnabled="True" RenderTransformOrigin="0.5,0.5">
+        <ListView Grid.Row="0"  ItemsSource="{Binding Product}" SelectedItem="{Binding SelectedProduct}" IsEnabled="True" RenderTransformOrigin="0.5,0.5">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="200" x:Name="Product" DisplayMemberBinding="{Binding Path=Products}"></GridViewColumn>
-                    <GridViewColumn Header="DateStart" Width="150" x:Name="DateStart"  DisplayMemberBinding="{Binding Path=DateStart}"></GridViewColumn>
-                    <GridViewColumn Header="Srok" x:Name="Srok" Width="100" DisplayMemberBinding="{Binding Path=Srok}"></GridViewColumn>
+                    <GridViewColumn Header="Название продукта" Width="200" x:Name="Product" DisplayMemberBinding="{Binding Path=Products}"></GridViewColumn>
+                    <GridViewColumn Header="Дата изготовления" Width="150" x:Name="DateStart"  DisplayMemberBinding="{Binding Path=DateStart}"></GridViewColumn>
+                    <GridViewColumn Header="Срок годности" x:Name="Srok" Width="100" DisplayMemberBinding="{Binding Path=Srok}"></GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
         <Button Grid.Row="1" Content="Add" Margin="400 0 0 0" Width="50" Command="{Binding OpenCommand}"></Button>
         <Button Grid.Row="1" Content="Delete" Margin="600 0 0 0" Width="50" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedProduct}"></Button>
+        <Button Grid.Row="1" Content="Проверка" Margin="200 0 0 0" Width="70" Command="{Binding CheckCommand}" CommandParameter="{Binding SelectedProduct}"></Button>
     </Grid>
 </Window>

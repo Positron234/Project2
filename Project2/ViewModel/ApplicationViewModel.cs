@@ -1,4 +1,5 @@
-﻿using Project.Model;
+﻿using ManageStaffDBApp.View;
+using Project.Model;
 using Project2.Model;
 using Project2.View;
 using System;
@@ -14,20 +15,21 @@ using System.Windows;
 
 namespace Project2.ViewModel
 {
-    public enum Status { None, Good, Bad }
+    
     public interface IApplicationViewModel: IProduct
     {
-        Status EstimateStatus { get; set; }
+        
     }
     class ApplicationViewModel: IApplicationViewModel,INotifyPropertyChanged
     {
-        private Status _estimateStatus = Status.None;
         private Product selectedProduct;
         private DataService db = new DataService();
         public AddNewProduct addNewProduct;
+        public MessageView messageView;
         private int id { get; set; }
         private string products { get; set; }
         private DateTime datestart { get; set; }
+        private DateTime dateend { get; set; }
         private int srok { get; set; }
         public ObservableCollection<Product> Product { get; set; }
         private int month;
@@ -57,6 +59,28 @@ namespace Project2.ViewModel
                         }));
                 
                 
+            }
+        }
+        private RelayCommand checkCommand;
+        public RelayCommand CheckCommand
+        {
+            get
+            {
+                return checkCommand ??
+                  (checkCommand = new RelayCommand(obj =>
+                  {
+                      Product? prod = obj as Product;
+                      if (DateEnd < DateTime.Now)
+                      {
+                          messageView = new MessageView(DateEnd.ToString()+" Просрочен!");
+                      }
+                      else
+                      {
+                          messageView = new MessageView(DateEnd.ToString() + " Годен!");
+                      }
+                      messageView.ShowDialog();
+                  },
+                 (obj) => Product.Count > 0));
             }
         }
         private RelayCommand removeCommand;
@@ -96,18 +120,6 @@ namespace Project2.ViewModel
             }
         }
         #endregion
-        private Status UpdateEstimateStatus(Product prod)
-        {
-            TimeSpan day = new TimeSpan(prod.Srok, 0, 0, 0);
-            if (prod.DateStart.Add(day) == DateTime.Now)
-                _estimateStatus=Status.None;
-            else if (prod.DateStart.Add(day) > DateTime.Now)
-                _estimateStatus = Status.Good;
-            else
-                _estimateStatus = Status.Bad;
-            return _estimateStatus;
-
-        }
         #region Product sector
         public int ID
         {
@@ -151,9 +163,13 @@ namespace Project2.ViewModel
             get { return selectedProduct; }
             set
             {
+
                 selectedProduct = value;
-                EstimateStatus = UpdateEstimateStatus(selectedProduct);
+                TimeSpan day = new TimeSpan(selectedProduct.Srok, 0, 0, 0);
+                DateTime date = selectedProduct.DateStart.Add(day);
+                DateEnd = date;
                 OnPropertyChanged("SelectedProduct");
+
             }
         }
         #region DateForm
@@ -162,7 +178,12 @@ namespace Project2.ViewModel
             get { return month; }
             set
             {
+                
                 month = value;
+                if(month < 0&& month>12)
+                {
+                    throw new Exception("Не месяц");
+                }
                 OnPropertyChanged("Month");
             }
         }
@@ -171,7 +192,12 @@ namespace Project2.ViewModel
             get { return time; }
             set
             {
+
                 time = value;
+                if (time < 0)
+                {
+                    throw new Exception("Не срок годности");
+                }
                 OnPropertyChanged("Time");
             }
         }
@@ -181,6 +207,7 @@ namespace Project2.ViewModel
             set
             {
                 name = value;
+                if(!string.IsNullOrEmpty(name))
                 OnPropertyChanged("Name");
             }
         }
@@ -199,22 +226,28 @@ namespace Project2.ViewModel
             set
             {
                 day = value;
+                if (day < 0 && day>31)
+                {
+                    throw new Exception("Не день");
+                }
                 OnPropertyChanged("Day");
             }
         }
+
         #endregion
+        public DateTime DateEnd
+        {
+            get { return dateend; }
+            set
+            {
+                
+                dateend=value;
+                OnPropertyChanged("DateEnd");
+            }
+        }
         public ApplicationViewModel()
         {
             Product = new ObservableCollection<Product>(db.GetAllProducts());
-        }
-        public Status EstimateStatus
-        {
-            get { return _estimateStatus; }
-            set
-            {
-                _estimateStatus = value;
-                OnPropertyChanged("EstimateStatus");
-            }
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
