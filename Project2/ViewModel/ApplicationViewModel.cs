@@ -47,15 +47,34 @@ namespace Project2.ViewModel
                     return addCommand ??
                         (addCommand = new RelayCommand(obj =>
                         {
-                            Product prod = new Product();
-                            DateTime dt = new DateTime(year, month, day);
-                            prod.DateStart = dt;
-                            prod.Products = name;
-                            prod.Srok = time;
-                            Product.Insert(0, prod);
-                            SelectedProduct = prod;
-                            db.CreateProduct(prod);
-                            addNewProduct.Close();
+                            try
+                            {
+                                Product prod = new Product();
+                                DateTime dt = new DateTime(year, month, day);
+                                if(dt>DateTime.Now)
+                                {
+                                    throw new Exception("Неправильная дата");
+                                }
+                                prod.DateStart = dt;
+                                if (string.IsNullOrEmpty(Name))
+                                {
+                                    throw new Exception("Введите имя");
+                                }
+                                    prod.Products = Name;
+                                if(Time<=0)
+                                {
+                                    throw new Exception("Не правильный срок годности");
+                                }
+                                prod.Srok = Time;
+                                Product.Insert(0, prod);
+                                SelectedProduct = prod;
+                                db.CreateProduct(prod);
+                                addNewProduct.Close();
+                            }
+                            catch(Exception ex) 
+                            {
+                                MessageBox.Show(ex.Message,"Ошибка ввода",MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                         }));
                 
                 
@@ -163,14 +182,20 @@ namespace Project2.ViewModel
             get { return selectedProduct; }
             set
             {
-
-                selectedProduct = value;
-                TimeSpan day = new TimeSpan(selectedProduct.Srok, 0, 0, 0);
-                DateTime date = selectedProduct.DateStart.Add(day);
-                DateEnd = date;
-                OnPropertyChanged("SelectedProduct");
-
+                    selectedProduct = value;
+                    OnPropertyChanged("SelectedProduct");
+                if (selectedProduct != null)
+                {
+                    DateEnd = setend(selectedProduct);
+                }
             }
+        }
+        DateTime setend(Product prod)
+        {
+            DateTime setend;
+            TimeSpan day = new TimeSpan(prod.Srok, 0, 0, 0);
+            setend = prod.DateStart.Add(day);
+            return setend;
         }
         #region DateForm
         public int Month
@@ -194,10 +219,6 @@ namespace Project2.ViewModel
             {
 
                 time = value;
-                if (time < 0)
-                {
-                    throw new Exception("Не срок годности");
-                }
                 OnPropertyChanged("Time");
             }
         }
@@ -207,8 +228,8 @@ namespace Project2.ViewModel
             set
             {
                 name = value;
-                if(!string.IsNullOrEmpty(name))
                 OnPropertyChanged("Name");
+                
             }
         }
         public int Year
@@ -240,7 +261,6 @@ namespace Project2.ViewModel
             get { return dateend; }
             set
             {
-                
                 dateend=value;
                 OnPropertyChanged("DateEnd");
             }
